@@ -1,0 +1,4 @@
+interface:
+  display_name: "Context Slim"
+  short_description: "Audit, relocate, compress, and verify agent context and installed skills"
+  default_prompt: "Use $context-slim to inventory always-loaded vs. on-demand agent context and installed skills in this project, then produce a five-action disposition checklist for my confirmation before modifying any files."
