@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+
+# Python / Script caches
+__pycache__/
+*.py[cod]
+.venv/
+
+# Skill evaluation workspaces & local scratch outputs
+*-workspace/
+.local/
+/yansu-agent-cli/
