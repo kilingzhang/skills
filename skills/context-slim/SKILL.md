@@ -8,7 +8,7 @@ description: |
 
 ## Goal
 
-Shrink every-turn agent context to high-signal rules while preserving 100% of user preferences, domain traps, and irreversible-action guardrails. Most bloated context is **misplaced** (on-demand material sitting in always-loaded files) rather than over-explained.
+Shrink every-turn agent context to high-signal rules while preserving 100% of user preferences, domain traps, and irreversible-action rules. Most bloated context is **misplaced** (on-demand material sitting in always-loaded files) rather than over-explained.
 
 Match the user's language in all tables, questions, and reports.
 
@@ -58,7 +58,7 @@ Evaluate every section, rule, and skill, then present a single checklist table f
    - User preferences, rejected approaches **and why they were rejected**, and machine/environment facts.
    - **Silent traps** (failure modes that do not throw errors) and **benign alarms** (outputs that look like errors but are normal).
    - Embedded half-sentence negative constraints (e.g., *"never writes to..."*, *"does not upload..."*).
-   - Guardrails for **irreversible, costly, or privileged actions**: deleting data, spending money, publishing/releasing, privilege escalation (`sudo`), rewriting pushed git history.
+   - Explicit rules for **irreversible, costly, or privileged actions**: deleting data, spending money, publishing/releasing, privilege escalation (`sudo`), rewriting pushed git history.
    - **Dated decisions** (explicit sign-offs with timestamps/dates).
 
 2. **Counterfactual Behavioral-Delta Test**:

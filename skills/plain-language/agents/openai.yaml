@@ -1,0 +1,4 @@
+interface:
+  display_name: "Plain Language"
+  short_description: "Scan and rewrite Chinese and English corporate jargon and AI cliches into clear prose"
+  default_prompt: "Use $plain-language to scan recent changes in this workspace for Chinese and English jargon or AI cliches, rewrite hits in context without touching frozen files or code identifiers, and verify clean diffs."

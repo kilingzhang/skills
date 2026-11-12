@@ -48,7 +48,7 @@ If an agent extracts the inline sorting logic *and* adds pinned-priority sorting
    - **Scope**: Update `sortTasks` to rank pinned items first (`pinnedAt` descending) and add pin/unpin action button + limit toast in `TaskRow.tsx`.
    - **Invariant**: Unpinning a task immediately restores it to its original chronological position.
 
-### 3. Impact (Blast Radius & Review Hotspots)
+### 3. Impact (Affected Scope & Review Hotspots)
 - **Touched Shared Modules / Contracts**: `types/task.ts` (`Task` interface), task storage adapter, and `TaskList` / `TaskRow` components.
 - **Compatibility & Legacy Data**: Backward-compatible optional `pinnedAt` field; no destructive storage migration needed.
 

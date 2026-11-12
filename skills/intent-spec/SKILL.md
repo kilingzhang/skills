@@ -29,7 +29,7 @@ When running inside a repository, gather grounded context before drafting—**wi
 
 ### Step 2: Calibrate Complexity Tier (`L1` / `L2` / `L3`)
 
-Match template weight to the blast radius of the change:
+Match template weight to the impact scope of the change:
 
 | Tier | Typical Scope | Card Shape & Required Elements |
 | :--- | :--- | :--- |
@@ -84,7 +84,7 @@ Keep the initial in-chat card scannable:
    - **Scope**: ...
    - **Invariant**: ...
 
-### 3. Impact (Blast Radius & Review Hotspots)
+### 3. Impact (Affected Scope & Review Hotspots)
 - **Touched Shared Modules / Contracts**: <Shared types, utilities, APIs, or migrations; or "Isolated within <module>">
 - **Compatibility & Legacy Data**: <Backward compatibility, defaults for existing records, or feature flags>
 
