@@ -8,7 +8,7 @@ Personal collection of reusable AI coding agent skills by [@kilingzhang](https:/
 
 | Skill | Summary | Path |
 | :--- | :--- | :--- |
-| [`intent-spec`](./skills/intent-spec/SKILL.md) | 引导将模糊想法转化为面向 **Intention Group Review（按意图分组审查）** 的结构化需求对齐卡与 Spec（按 `L1 / L2 / L3` 复杂度自适应裁剪 `Why`、正交 `Intention Groups`、`Impact` 与 `Non-Goals`）。 | `skills/intent-spec` |
+| [`intent-spec`](./skills/intent-spec/SKILL.md) | Turn rough ideas into structured specs engineered for **Intention Group Review**—calibrating `Why`, orthogonal `Intention Groups`, `Impact`, and `Non-Goals` across `L1 / L2 / L3` complexity tiers before saving a spec or implementing atomic changes. | `skills/intent-spec` |
 
 ---
 

@@ -1,4 +1,4 @@
 interface:
   display_name: "Intent Spec"
-  short_description: "引导生成面向 Intention Group Review 的需求对齐卡与 Spec"
-  default_prompt: "使用 $intent-spec 梳理并生成本次需求的对齐卡（按复杂度分级拆解 Why、正交 Intention Groups、Impact 与 Non-Goals），先与我确认，再决定落盘 Spec 文档或按意图组开发。"
+  short_description: "Draft specs structured for Intention Group Review"
+  default_prompt: "Use $intent-spec to structure this requirement into a complexity-calibrated Intent Alignment Card (Why, orthogonal Intention Groups, Impact, and Non-Goals) and confirm with me before saving a spec or implementing."

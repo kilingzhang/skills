@@ -1,67 +1,72 @@
-# Intent Spec 分级示例（L1 / L2 / L3）
+# Intent Spec Calibration Examples (`L1` / `L2` / `L3`)
 
-本文档展示如何把用户的口语化需求转化为契合 **Intention Group Review** 的分级对齐卡，既保证边界清晰，又避免八股文冗长。
+These examples illustrate how to translate rough, conversational feature requests into right-sized **Intent Alignment Cards** optimized for **Intention Group Review**—without forcing rigid bureaucracy onto small tasks.
 
 ---
 
-## 示例 1：`L1 单意图微改`（拒绝过度模板化）
+## Example 1: `L1 Single-Intent Micro-Change` (Zero Boilerplate)
 
-**用户原始输入**：
-> 帮我理个小需求：现在优惠券抵扣完如果实付金额刚好是 0 元，结算接口会报除零错误，需要兼容一下。
+**User Input**:
+> Help me spec a quick requirement: when a coupon discounts the payable order total down to $0, the checkout settlement endpoint throws a division-by-zero error. We need to handle $0 totals cleanly.
 
-**对齐卡输出（极简 5 行）**：
+**Alignment Card Output (5 lines)**:
 ```markdown
-## 📋 需求对齐卡：0 元实付订单结算防除零兜底 `[L1 单意图微改]`
+## Intent Alignment Card: Guard Zero-Amount Order Settlement Against Division by Zero `[L1 Micro-Change]`
 
-- **Why**：优惠券全额抵扣导致实付总额 `payableAmount === 0` 时，分摊比例计算触发除零异常，阻断 0 元单下单。
-- **Intention Group**：**[边界修复] 结算分摊计算增加零金额短路分支**
-  - **改动内容**：在 `calculateDiscountAllocation` 入口判断实付或原价总额为 `0` 时直接返回零分摊结果，并补充 `0` 元单单元测试。
-  - **验收约束（Invariant）**：`payableAmount > 0` 的原有分摊精度与舍入逻辑 100% 不变；不修改结算接口入参/出参结构。
+- **Why**: Full-discount coupons produce `payableAmount === 0`, causing proportional discount allocation to divide by zero and block `$0` checkouts.
+- **Intention Group**: **[Boundary Guard] Short-circuit zero-total allocation in settlement calculator**
+  - **Scope**: Return zeroed allocation shares early in `calculateDiscountAllocation` when total or payable amount is `0`, plus unit test coverage for `$0` orders.
+  - **Invariant**: Allocation rounding and precision for `payableAmount > 0` remain 100% unchanged; request/response schemas stay untouched.
 ```
-> 确认无误的话，需要直接按此边界修改代码，还是保存记录？
+> Looks right? Let me know if I should implement this directly or save a short spec note.
 
 ---
 
-## 示例 2：`L2 常规特性`（正交拆分重构、契约、逻辑与 UI）
+## Example 2: `L2 Standard Feature` (Separating Refactor, Contract, and UI)
 
-**用户原始输入**：
-> 我想提个需求：给任务列表加一个「置顶」功能，最多置顶 5 个，刷新页面也要保留。另外之前任务排序那块代码全堆在组件里太乱了，顺便理一下。
+**User Input**:
+> Let's write a spec: add a "Pin" feature to the task list, max 5 pinned tasks, persisted across page reloads. Also, the current task sorting code is jammed inline inside the component and super messy—let's clean that up too.
 
-**为什么不能混着写**：
-如果直接让 Agent 开干，它会把“抽离排序函数”和“新增置顶排序规则”搅在同一个文件同一个 Diff Hunk 里，Review 时根本看不出原有的默认排序有没有被改坏。
+**Why Orthogonal Grouping Matters Here**:
+If an agent extracts the inline sorting logic *and* adds pinned-priority sorting inside the same diff hunk, a reviewer cannot easily verify whether the default unpinned sort order accidentally changed.
 
-**对齐卡输出（标准四要素）**：
+**Alignment Card Output**:
 ```markdown
-## 📋 需求对齐卡：任务列表支持持久化置顶（上限 5 项） `[L2 常规特性]`
+## Intent Alignment Card: Persistent Task Pinning (Max 5 Items) `[L2 Standard Feature]`
 
-### 1. Why（背景与核心动机）
-- 高频跟进的核心任务容易被新任务冲掉，需要支持手动置顶（上限 5 个）且跨刷新持久化；同时需先将组件内耦合的排序逻辑解耦，避免在混乱代码上硬叠规则。
+### 1. Why (Motivation & Problem)
+- High-priority tasks get buried under new entries; users need persistent manual pinning (capped at 5 items). Inline sorting inside the list component also needs to be extracted first so pinning rules are not layered onto tangled view code.
 
-### 2. Intention Groups（按意图拆解的变更组）
-1. **[意图组 1 — 前置重构：抽离任务列表纯排序函数]**
-   - **改动内容**：将 `TaskList.tsx` 内联的排序逻辑提取至 `utils/sortTasks.ts` 并补齐基准单测。
-   - **验收约束（Invariant）**：纯结构迁移，未置顶状态下的任务排列顺序与现有行为 100% 一致。
-2. **[意图组 2 — 数据契约与存储：扩展 `pinnedAt` 字段与接口/本地持久化]**
-   - **改动内容**：在 `Task` 类型与存储层新增可选字段 `pinnedAt?: number`，提供置顶/取消置顶状态更新方法，拦截超出 5 个上限的操作。
-   - **验收约束（Invariant）**：存量无 `pinnedAt` 字段的任务正常解析为“未置顶”；超过 5 个时返回明确错误提示且不写入脏状态。
-3. **[意图组 3 — 排序规则与视图交互：接入置顶优先排序及操作入口]**
-   - **改动内容**：`sortTasks` 支持置顶项按 `pinnedAt` 倒序排在最前；任务行新增置顶图标按钮与满额 Toast 提示。
-   - **验收约束（Invariant）**：取消置顶后任务立即回到其原本的时间序位置。
+### 2. Intention Groups (Orthogonal Change Buckets)
+1. **[Group 1 — Preparatory Refactor: Extract pure task-sorting helper]**
+   - **Scope**: Move inline sort comparator from `TaskList.tsx` into `utils/sortTasks.ts` with baseline unit tests.
+   - **Invariant**: Pure structural extraction; unpinned task ordering matches existing runtime behavior 100%.
+2. **[Group 2 — Data Contract & Persistence: Add `pinnedAt` field and 5-item cap]**
+   - **Scope**: Add optional `pinnedAt?: number` to `Task` model and persistence store; implement pin/unpin mutations that reject a 6th pin cleanly.
+   - **Invariant**: Existing stored tasks without `pinnedAt` deserialize as unpinned; exceeding 5 pinned items returns a typed validation error without mutating state.
+3. **[Group 3 — Sorting & UI Controls: Prioritize pinned tasks and add pin toggle]**
+   - **Scope**: Update `sortTasks` to rank pinned items first (`pinnedAt` descending) and add pin/unpin action button + limit toast in `TaskRow.tsx`.
+   - **Invariant**: Unpinning a task immediately restores it to its original chronological position.
 
-### 3. Impact（影响面与重点审查区）
-- **波及模块**：共享类型 `types/task.ts`、任务列表组件及持久化层。
-- **兼容性**：老数据缺省 `pinnedAt` 向下兼容，无需破坏性迁移。
+### 3. Impact (Blast Radius & Review Hotspots)
+- **Touched Shared Modules / Contracts**: `types/task.ts` (`Task` interface), task storage adapter, and `TaskList` / `TaskRow` components.
+- **Compatibility & Legacy Data**: Backward-compatible optional `pinnedAt` field; no destructive storage migration needed.
 
-### 4. Non-Goals（明确不做与防噪边界）
-- 本次不支持拖拽调整置顶项之间的自定义顺序（统一按置顶时间倒序）。
-- 不涉及归档列表或回收站列表的置顶。
-- **工程防噪**：意图组 1（纯重构）必须与意图组 2/3（新功能）严格分拆，禁止顺手改动无关样式或重命名其他状态字段。
+### 4. Non-Goals (Out of Scope & Diff Hygiene)
+- Custom drag-and-drop reordering among pinned items is out of scope (ordered strictly by `pinnedAt` descending).
+- Archived and trashed task views are unchanged.
+- **Diff Hygiene**: Keep Group 1 (pure refactor) strictly separate from Groups 2–3 (feature behavior); no unrelated styling tweaks or state field renames.
 ```
 
 ---
 
-## 示例 3：`L3 架构重构 / 破坏性风险`（强调迁移与回滚边界）
+## Example 3: `L3 Architectural / Breaking-Risk Change` (Rollout & Rollback Boundaries)
 
-当需求涉及**数据库字段废弃、认证鉴权流重写、跨服务协议升级**时，升为 `[L3 架构变更]`，在标准模板基础上额外明确：
-- **双写 / 灰度 / 回滚顺序**：例如意图组按 `1. 新增兼容读取 -> 2. 开启双写 -> 3. 切换主读路径 -> 4. 清理旧字段（单独延后 PR）` 拆分，确保任意一组回滚不会打挂线上存量请求。
-- **待拍板决策（Open Decisions）**：将需要负责人二选一的兼容性或性能取舍单独列在卡片底部，拍板后再定稿落盘。
+When a spec involves **schema deprecations, authentication flow rewrites, or cross-service contract changes**, upgrade to `[L3 Architectural Change]` and explicitly sequence Intention Groups for safe incremental rollout and rollback:
+
+1. **Group 1 — Expand Contract**: Add new schema columns/fields and backward-compatible readers (safe no-op deploy).
+2. **Group 2 — Dual-Write & Backfill**: Write to both legacy and new fields; backfill historical records idempotently.
+3. **Group 3 — Switch Primary Reads**: Cut read paths over to the new contract behind a toggle or verified invariant.
+4. **Group 4 — Contract Cleanup (Deferred / Separate PR)**: Drop deprecated fields only after verification window closes.
+
+Surface any unresolved architectural trade-offs under an explicit **Open Decisions** block at the bottom of the card before persisting the final spec.
