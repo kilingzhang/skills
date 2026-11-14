@@ -1,0 +1,12 @@
+{
+  "remotes": [
+    {
+      "source": "kubai087/kubai-icons",
+      "skills": [
+        "kubai-icons"
+      ],
+      "homepage": "https://icons.kubai.design/skill/",
+      "description": "Draw layered functional icons as animated hover SVG+JS or static SVG files in the Kubai Icons style."
+    }
+  ]
+}

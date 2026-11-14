@@ -1,10 +1,12 @@
 # skills
 
-Personal collection of reusable AI coding agent skills by [@kilingzhang](https://github.com/kilingzhang), compatible with **Claude Code**, **Codex**, **Gemini CLI**, **Cursor**, and the open [`npx skills`](https://skills.sh) ecosystem.
+Personal collection of reusable AI coding agent skills by [@kilingzhang](https://github.com/kilingzhang), compatible with **Claude Code**, **Codex**, **Gemini CLI**, **Cursor**, and the [`npx skills`](https://skills.sh) ecosystem.
 
 ---
 
-## Included Skills
+## First-Party Skills
+
+Maintained directly in this repository under `skills/`:
 
 | Skill | Summary | Path |
 | :--- | :--- | :--- |
@@ -14,22 +16,76 @@ Personal collection of reusable AI coding agent skills by [@kilingzhang](https:/
 
 ---
 
+## Referenced Upstream Skills
+
+Declared in [`remote-skills.json`](./remote-skills.json) **without copying or forking upstream files**. Installing them points [`skills`](https://skills.sh) directly at each author's repository so `npx skills update` pulls upstream changes straight from the source.
+
+| Skill | Summary | Upstream |
+| :--- | :--- | :--- |
+| [`kubai-icons`](https://icons.kubai.design/skill/) | Draw layered functional icons as animated hover SVG+JS or static SVG files in the Kubai Icons style. | [`kubai087/kubai-icons`](https://github.com/kubai087/kubai-icons) |
+
+---
+
 ## Installation & Updates
 
-Install or sync via the [Skills CLI](https://skills.sh):
+### Install everything (first-party + upstream references)
 
 ```bash
-# Interactive selection from this repository
-npx skills add kilingzhang/skills
+npx github:kilingzhang/skills
+```
 
-# Install a specific skill
-npx skills add kilingzhang/skills --skill intent-spec
-npx skills add kilingzhang/skills --skill context-slim
-npx skills add kilingzhang/skills --skill plain-language
+This installs first-party skills from `kilingzhang/skills` and installs each entry in [`remote-skills.json`](./remote-skills.json) directly from its upstream repository via `npx skills add`.
 
-# Update installed skills
+Useful options:
+
+```bash
+# Preview the exact npx skills add commands
+npx github:kilingzhang/skills --dry-run
+
+# List configured first-party and upstream skills
+npx github:kilingzhang/skills --list
+
+# Install only referenced upstream skills (or only first-party skills)
+npx github:kilingzhang/skills --remote-only
+npx github:kilingzhang/skills --local-only
+
+# Install a single skill by name into the current project instead of globally
+npx github:kilingzhang/skills -p -s kubai-icons
+```
+
+### Install individual skills directly with `npx skills`
+
+```bash
+# First-party skills from this repository
+npx skills add kilingzhang/skills -g
+
+# Referenced upstream skill straight from its author repository
+npx skills add kubai087/kubai-icons --skill kubai-icons -g
+```
+
+### Update installed skills
+
+```bash
+# Pulls each skill directly from its recorded upstream repository
 npx skills update
 ```
+
+---
+
+## Adding a New Upstream Skill
+
+Add an entry to [`remote-skills.json`](./remote-skills.json):
+
+```json
+{
+  "source": "owner/repo",
+  "skills": ["skill-name"],
+  "homepage": "https://example.com",
+  "description": "Short summary of what the skill does."
+}
+```
+
+Omit `skills` (or set `["*"]`) to install all skills exposed by that upstream repository, and optionally add `"ref": "branch-or-tag"` to pin a specific ref.
 
 ---
 
@@ -37,14 +93,18 @@ npx skills update
 
 ```text
 skills/
-└── skills/
-    └── <skill-name>/
-        ├── SKILL.md     # Core skill instructions & YAML trigger metadata
-        ├── agents/      # Optional UI metadata (e.g. openai.yaml)
-        ├── references/  # Optional examples, schemas, or deep-dive docs
-        └── scripts/     # Optional skill-bundled helper scripts
+├── bin/
+│   └── sync-skills.mjs      # Thin wrapper calling npx skills add per source
+├── skills/
+│   └── <skill-name>/
+│       ├── SKILL.md         # Core skill instructions & YAML trigger metadata
+│       ├── agents/          # Optional UI metadata (e.g. openai.yaml)
+│       ├── references/      # Optional examples, schemas, or deep-dive docs
+│       └── scripts/         # Optional skill-bundled helper scripts
+├── package.json             # Enables `npx github:kilingzhang/skills`
+└── remote-skills.json       # Upstream third-party skill references
 ```
 
 ## License
 
-[MIT](./LICENSE)
+First-party skills and scripts in this repository are licensed under the [MIT License](./LICENSE). Referenced upstream skills in [`remote-skills.json`](./remote-skills.json) are neither included in nor relicensed by this repository and remain subject to their respective upstream licenses.

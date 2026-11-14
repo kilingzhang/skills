@@ -1,0 +1,25 @@
+{
+  "name": "kilingzhang-skills",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Personal AI coding agent skills and upstream skill references",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kilingzhang/skills.git"
+  },
+  "bin": {
+    "kilingzhang-skills": "./bin/sync-skills.mjs"
+  },
+  "files": [
+    "bin/",
+    "skills/",
+    "remote-skills.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}
