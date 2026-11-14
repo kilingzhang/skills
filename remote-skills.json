@@ -7,6 +7,14 @@
       ],
       "homepage": "https://icons.kubai.design/skill/",
       "description": "Draw layered functional icons as animated hover SVG+JS or static SVG files in the Kubai Icons style."
+    },
+    {
+      "source": "emilkowalski/skills",
+      "skills": [
+        "*"
+      ],
+      "homepage": "https://aiforui.dev/skills",
+      "description": "UI design engineering, animation, gestures, mobile polish, and interface review skills by Emil Kowalski."
     }
   ]
 }

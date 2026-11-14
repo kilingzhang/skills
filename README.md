@@ -23,6 +23,7 @@ Declared in [`remote-skills.json`](./remote-skills.json) **without copying or fo
 | Skill | Summary | Upstream |
 | :--- | :--- | :--- |
 | [`kubai-icons`](https://icons.kubai.design/skill/) | Draw layered functional icons as animated hover SVG+JS or static SVG files in the Kubai Icons style. | [`kubai087/kubai-icons`](https://github.com/kubai087/kubai-icons) |
+| [`aiforui` (`*`)](https://aiforui.dev/skills) | UI design engineering, animation, gestures, mobile polish, and interface review skills by Emil Kowalski. | [`emilkowalski/skills`](https://github.com/emilkowalski/skills) |
 
 ---
 
@@ -61,6 +62,7 @@ npx skills add kilingzhang/skills -g
 
 # Referenced upstream skill straight from its author repository
 npx skills add kubai087/kubai-icons --skill kubai-icons -g
+npx skills add emilkowalski/skills -g
 ```
 
 ### Update installed skills
